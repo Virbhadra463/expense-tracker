@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Expense Tracker — Know Every Rupee</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --p: #4D10A6;
+      --pm: #6B22CC;
+      --pl: #8B44E8;
+      --pd: #2D0870;
+      --l: #E1FF17;
+      --lm: #C8E800;
+      --ld: #A8C000;
+      --w: #FFFFFF;
+      --off: #F8F6FF;
+      --ink: #0D0820;
+      --muted: #4A3F6B;
+      --light: #8878B0;
+      --border: #E8E0FF;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--w);
+      color: var(--ink);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none
+    }
+
+    ul {
+      list-style: none
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 900;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3rem;
+      background: var(--w);
+      border-bottom: 1.5px solid var(--border);
+      transition: all .3s
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: .7rem
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--p);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .logo-mark::after {
+      content: '₹';
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--l);
+      position: absolute
+    }
+
+    .nav-brand {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--p);
+      letter-spacing: -.5px
+    }
+
+    .nav-brand em {
+      color: var(--p);
+      font-style: normal
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.2rem
+    }
+
+    .nav-links a {
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color .2s
+    }
+
+    .nav-links a:hover {
+      color: var(--p)
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: .7rem
+    }
+
+    .btn-ghost {
+      padding: .4rem 1rem;
+      font-size: .73rem;
+      font-weight: 500;
+      letter-spacing: .5px;
+      color: var(--p);
+      border: 1.5px solid var(--p);
+      border-radius: 4px;
+      transition: all .2s
+    }
+
+    .btn-ghost:hover {
+      background: var(--p);
+      color: var(--w)
+    }
+
+    .btn-solid {
+      padding: .42rem 1.1rem;
+      font-size: .73rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      background: var(--l);
+      color: var(--ink);
+      border-radius: 4px;
+      transition: all .2s;
+      border: 1.5px solid var(--l)
+    }
+
+    .btn-solid:hover {
+      background: var(--lm);
+      transform: translateY(-1px)
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding-top: 62px;
+      background: var(--w);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column
+    }
+
+    .hero-bg-shape {
+      position: absolute;
+      top: -80px;
+      right: -120px;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: var(--p);
+      opacity: .06;
+      pointer-events: none
+    }
+
+    .hero-bg-shape2 {
+      position: absolute;
+      bottom: -200px;
+      left: -150px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: var(--l);
+      opacity: .12;
+      pointer-events: none
+    }
+
+    .hero-grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(77, 16, 166, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(77, 16, 166, .04) 1px, transparent 1px);
+      background-size: 56px 56px;
+      pointer-events: none
+    }
+
+    .hero-inner {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 3rem;
+      padding: 4rem 3rem 3rem 5rem;
+      position: relative;
+      z-index: 2;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--l);
+      color: var(--ink);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: .3rem .8rem;
+      border-radius: 2px;
+      margin-bottom: 1.8rem
+    }
+
+    .hero-eyebrow::before {
+      content: "▶";
+      font-size: .55rem
+    }
+
+    h1.hero-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      line-height: 1.0;
+      letter-spacing: -1.5px;
+      color: var(--p);
+      margin-bottom: 1.4rem
+    }
+
+    h1.hero-title .white-stroke {
+      -webkit-text-stroke: 2px var(--p);
+      color: transparent
+    }
+
+    h1.hero-title .lime {
+      color: var(--l);
+      -webkit-text-stroke: 0
+    }
+
+    .hero-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: .88rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 460px;
+      margin-bottom: 2.2rem
+    }
+
+    .hero-desc strong {
+      color: var(--p);
+      font-weight: 500
+    }
+
+    .hero-btns {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem
+    }
+
+    .btn-hero-primary {
+      padding: .9rem 2rem;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      background: var(--p);
+      color: var(--l);
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      transition: all .25s;
+      border: 2px solid var(--p)
+    }
+
+    .btn-hero-primary:hover {
+      background: var(--pd);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(77, 16, 166, .3)
+    }
+
+    .btn-hero-primary svg {
+      width: 16px;
+      height: 16px
+    }
+
+    .btn-hero-secondary {
+      padding: .9rem 2rem;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--p);
+      border: 2px solid var(--p);
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      transition: all .25s
+    }
+
+    .btn-hero-secondary:hover {
+      background: var(--p);
+      color: var(--w)
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.2rem
+    }
+
+    .hstat {
+      display: flex;
+      flex-direction: column
+    }
+
+    .hstat-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 1.9rem;
+      color: var(--p);
+      line-height: 1
+    }
+
+    .hstat-num sup {
+      font-size: .8em;
+      color: var(--l)
+    }
+
+    .hstat-lbl {
+      font-size: .6rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-top: 3px
+    }
+
+    .hstat-divider {
+      width: 1px;
+      background: var(--border)
+    }
+
+    /* HERO RIGHT — APP MOCKUP */
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .app-mockup {
+      width: 100%;
+      max-width: 420px;
+      background: var(--w);
+      border-radius: 16px;
+      box-shadow: 0 32px 80px rgba(77, 16, 166, .18), 0 4px 16px rgba(0, 0, 0, .06);
+      border: 1.5px solid var(--border);
+      overflow: hidden
+    }
+
+    .mock-header {
+      background: var(--p);
+      padding: .85rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .mock-h-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .82rem;
+      color: var(--l);
+      letter-spacing: .3px
+    }
+
+    .mock-h-date {
+      font-size: .62rem;
+      color: rgba(255, 255, 255, .5)
+    }
+
+    .mock-body {
+      padding: 1rem
+    }
+
+    .mock-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: .5rem;
+      margin-bottom: .9rem
+    }
+
+    .mock-kpi {
+      background: var(--off);
+      border-radius: 8px;
+      padding: .7rem .75rem
+    }
+
+    .mock-kpi-val {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--p);
+      line-height: 1
+    }
+
+    .mock-kpi-val.lime {
+      color: var(--ink)
+    }
+
+    .mock-kpi-lbl {
+      font-size: .55rem;
+      font-weight: 500;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-top: 2px
+    }
+
+    .mock-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: .9rem
+    }
+
+    .mock-bar-fill {
+      height: 100%;
+      width: 68%;
+      background: linear-gradient(90deg, var(--p), var(--pm));
+      border-radius: 3px
+    }
+
+    .mock-entry {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .55rem .6rem;
+      border-radius: 7px;
+      margin-bottom: .35rem;
+      transition: background .15s
+    }
+
+    .mock-entry:hover {
+      background: var(--off)
+    }
+
+    .mock-entry-ico {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+      flex-shrink: 0
+    }
+
+    .mock-entry-label {
+      flex: 1
+    }
+
+    .mock-entry-name {
+      font-size: .72rem;
+      font-weight: 500;
+      color: var(--ink)
+    }
+
+    .mock-entry-cat {
+      font-size: .58rem;
+      color: var(--light);
+      margin-top: 1px
+    }
+
+    .mock-entry-amt {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .82rem;
+      color: var(--p)
+    }
+
+    .mock-entry-amt.neg {
+      color: var(--p)
+    }
+
+    .mock-add-btn {
+      width: 100%;
+      padding: .65rem;
+      background: var(--l);
+      border-radius: 8px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+      margin-top: .7rem;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .mock-add-btn:hover {
+      background: var(--lm)
+    }
+
+    .mock-add-btn svg {
+      width: 14px;
+      height: 14px
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: var(--p);
+      padding: .55rem 0;
+      overflow: hidden
+    }
+
+    .ticker-inner {
+      display: flex;
+      gap: 3rem;
+      animation: ticker 28s linear infinite;
+      white-space: nowrap
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      font-size: .65rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .6)
+    }
+
+    .ticker-item .ti-lime {
+      color: var(--l)
+    }
+
+    @keyframes ticker {
+      0% {
+        transform: translateX(0)
+      }
+
+      100% {
+        transform: translateX(-50%)
+      }
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      position: relative
+    }
+
+    .sec-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--l);
+      background: var(--p);
+      padding: .28rem .8rem;
+      border-radius: 2px;
+      margin-bottom: 1rem
+    }
+
+    .sec-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -.5px;
+      color: var(--p);
+      margin-bottom: .9rem
+    }
+
+    .sec-title .accent {
+      color: var(--l);
+      background: var(--p);
+      padding: 0 .3rem
+    }
+
+    .sec-desc {
+      font-size: .85rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 520px
+    }
+
+    /* ── FEATURES GRID ── */
+    .features-section {
+      padding: 7rem 5rem;
+      background: var(--w)
+    }
+
+    .features-head {
+      text-align: center;
+      margin-bottom: 4rem
+    }
+
+    .features-head .sec-desc {
+      margin: 0 auto
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.4rem
+    }
+
+    .feat-card {
+      background: var(--w);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 1.8rem;
+      transition: all .3s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .feat-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--p), var(--pm));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s
+    }
+
+    .feat-card:hover {
+      border-color: transparent;
+      box-shadow: 0 12px 40px rgba(77, 16, 166, .1);
+      transform: translateY(-4px)
+    }
+
+    .feat-card:hover::after {
+      transform: scaleX(1)
+    }
+
+    .feat-ico {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      background: var(--off);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 1.1rem;
+      transition: all .3s
+    }
+
+    .feat-card:hover .feat-ico {
+      background: var(--p);
+      border-color: var(--p)
+    }
+
+    .feat-num {
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-bottom: .45rem
+    }
+
+    .feat-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--ink);
+      margin-bottom: .55rem
+    }
+
+    .feat-desc {
+      font-size: .78rem;
+      line-height: 1.7;
+      color: var(--muted)
+    }
+
+    /* ── CORE FEATURES (BIG) ── */
+    .core-section {
+      padding: 7rem 5rem;
+      background: var(--p);
+      overflow: hidden
+    }
+
+    .core-head {
+      text-align: center;
+      margin-bottom: 4rem
+    }
+
+    .core-head .sec-title {
+      color: var(--w)
+    }
+
+    .core-head .sec-tag {
+      background: rgba(255, 255, 255, .15);
+      color: var(--l)
+    }
+
+    .core-head .sec-desc {
+      color: rgba(255, 255, 255, .65);
+      margin: 0 auto
+    }
+
+    .core-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem
+    }
+
+    .core-card {
+      background: rgba(255, 255, 255, .07);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all .3s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .core-card:hover {
+      background: rgba(255, 255, 255, .12);
+      transform: translateY(-3px)
+    }
+
+    .core-card.highlight {
+      background: var(--l);
+      border-color: var(--l)
+    }
+
+    .core-card.highlight .core-title {
+      color: var(--ink)
+    }
+
+    .core-card.highlight .core-desc {
+      color: rgba(13, 8, 32, .7)
+    }
+
+    .core-card.highlight .core-num {
+      color: rgba(13, 8, 32, .35)
+    }
+
+    .core-card.highlight .core-tag {
+      background: var(--p);
+      color: var(--l)
+    }
+
+    .core-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 3.5rem;
+      color: rgba(255, 255, 255, .08);
+      line-height: 1;
+      position: absolute;
+      top: .8rem;
+      right: 1.2rem
+    }
+
+    .core-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: .9rem
+    }
+
+    .core-tag {
+      background: rgba(255, 255, 255, .15);
+      color: var(--l);
+      padding: .22rem .65rem;
+      border-radius: 2px
+    }
+
+    .core-ico {
+      font-size: 1.6rem;
+      margin-bottom: .7rem;
+      display: block
+    }
+
+    .core-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--w);
+      margin-bottom: .55rem
+    }
+
+    .core-desc {
+      font-size: .78rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, .6)
+    }
+
+    .core-feature-list {
+      margin-top: .8rem;
+      display: flex;
+      flex-direction: column;
+      gap: .35rem
+    }
+
+    .core-feat-item {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .7)
+    }
+
+    .core-card.highlight .core-feat-item {
+      color: rgba(13, 8, 32, .65)
+    }
+
+    .core-feat-item::before {
+      content: '→';
+      font-size: .65rem;
+      opacity: .6;
+      flex-shrink: 0
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      padding: 7rem 5rem;
+      background: var(--off)
+    }
+
+    .how-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 5rem;
+      align-items: center
+    }
+
+    .how-steps {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0
+    }
+
+    .how-step {
+      display: flex;
+      gap: 1.1rem;
+      padding: 1.4rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer
+    }
+
+    .how-step:last-child {
+      border-bottom: none
+    }
+
+    .how-step-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 2rem;
+      color: var(--border);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 40px;
+      transition: color .3s
+    }
+
+    .how-step:hover .how-step-num {
+      color: var(--l);
+      -webkit-text-stroke: 1px var(--p)
+    }
+
+    .how-step-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .92rem;
+      color: var(--ink);
+      margin-bottom: .3rem
+    }
+
+    .how-step-desc {
+      font-size: .78rem;
+      line-height: 1.65;
+      color: var(--muted)
+    }
+
+    .how-visual {
+      background: var(--p);
+      border-radius: 14px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden
+    }
+
+    .how-visual::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .04)
+    }
+
+    .how-visual-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .4);
+      margin-bottom: 1.2rem
+    }
+
+    .how-metric {
+      margin-bottom: 1.2rem
+    }
+
+    .how-metric-label {
+      font-size: .65rem;
+      color: rgba(255, 255, 255, .5);
+      margin-bottom: .4rem;
+      letter-spacing: .5px
+    }
+
+    .how-metric-val {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 1.8rem;
+      color: var(--w);
+      line-height: 1
+    }
+
+    .how-metric-val .lime-accent {
+      color: var(--l)
+    }
+
+    .how-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, .1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: .35rem
+    }
+
+    .how-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--l), var(--lm))
+    }
+
+    .how-bar-lbl {
+      display: flex;
+      justify-content: space-between;
+      font-size: .58rem;
+      color: rgba(255, 255, 255, .4)
+    }
+
+    .how-alert {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      background: rgba(225, 255, 23, .12);
+      border: 1px solid rgba(225, 255, 23, .25);
+      border-radius: 7px;
+      padding: .7rem .9rem;
+      margin-top: 1rem
+    }
+
+    .how-alert-ico {
+      font-size: 1rem;
+      flex-shrink: 0
+    }
+
+    .how-alert-text {
+      font-size: .7rem;
+      color: var(--l);
+      line-height: 1.5
+    }
+
+    /* ── MONEY-TO-TIME SECTION ── */
+    .mtt-section {
+      padding: 7rem 5rem;
+      background: var(--w)
+    }
+
+    .mtt-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center
+    }
+
+    .mtt-calc {
+      background: var(--off);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem
+    }
+
+    .mtt-row {
+      margin-bottom: 1.2rem
+    }
+
+    .mtt-label {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-bottom: .4rem
+    }
+
+    .mtt-input {
+      width: 100%;
+      padding: .65rem .9rem;
+      background: var(--w);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: .88rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .2s
+    }
+
+    .mtt-input:focus {
+      border-color: var(--p)
+    }
+
+    .mtt-result {
+      background: var(--p);
+      border-radius: 10px;
+      padding: 1.3rem;
+      text-align: center;
+      margin-top: 1.3rem
+    }
+
+    .mtt-result-label {
+      font-size: .62rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .5);
+      margin-bottom: .5rem
+    }
+
+    .mtt-result-val {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 2.2rem;
+      color: var(--l);
+      line-height: 1;
+      margin-bottom: .3rem
+    }
+
+    .mtt-result-sub {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .6)
+    }
+
+    .mtt-calc-btn {
+      width: 100%;
+      padding: .75rem;
+      background: var(--l);
+      border-radius: 6px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background .2s;
+      margin-top: 1rem;
+      border: none
+    }
+
+    .mtt-calc-btn:hover {
+      background: var(--lm)
+    }
+
+    /* ── UPI QR SECTION ── */
+    .upi-section {
+      padding: 7rem 5rem;
+      background: var(--p);
+      overflow: hidden
+    }
+
+    .upi-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center
+    }
+
+    .upi-content .sec-title {
+      color: var(--w)
+    }
+
+    .upi-content .sec-tag {
+      background: rgba(255, 255, 255, .15);
+      color: var(--l)
+    }
+
+    .upi-content .sec-desc {
+      color: rgba(255, 255, 255, .65)
+    }
+
+    .upi-steps {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: .9rem
+    }
+
+    .upi-step {
+      display: flex;
+      gap: .9rem;
+      align-items: flex-start
+    }
+
+    .upi-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--l);
+      color: var(--ink);
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: .75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px
+    }
+
+    .upi-step-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .88rem;
+      color: var(--w);
+      margin-bottom: .2rem
+    }
+
+    .upi-step-desc {
+      font-size: .74rem;
+      color: rgba(255, 255, 255, .6);
+      line-height: 1.6
+    }
+
+    .upi-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .qr-mockup {
+      background: var(--w);
+      border-radius: 16px;
+      padding: 1.8rem;
+      width: 280px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .25)
+    }
+
+    .qr-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .82rem;
+      color: var(--p);
+      margin-bottom: 1rem
+    }
+
+    .qr-box {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 1rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .qr-scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--p);
+      animation: qr-scan 2s ease-in-out infinite
+    }
+
+    @keyframes qr-scan {
+      0% {
+        top: 0;
+        opacity: 1
+      }
+
+      100% {
+        top: 100%;
+        opacity: .3
+      }
+    }
+
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 2px;
+      width: 112px;
+      height: 112px
+    }
+
+    .qr-cell {
+      border-radius: 1px
+    }
+
+    .qr-popup {
+      background: var(--off);
+      border-radius: 8px;
+      padding: .9rem;
+      text-align: left;
+      border: 1.5px solid var(--border)
+    }
+
+    .qr-popup-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .78rem;
+      color: var(--p);
+      margin-bottom: .6rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem
+    }
+
+    .qr-popup-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .68rem;
+      color: var(--muted);
+      margin-bottom: .3rem
+    }
+
+    .qr-popup-row span:last-child {
+      font-weight: 600;
+      color: var(--ink)
+    }
+
+    .qr-confirm-btns {
+      display: flex;
+      gap: .5rem;
+      margin-top: .7rem
+    }
+
+    .qr-cb {
+      flex: 1;
+      padding: .4rem;
+      border-radius: 5px;
+      font-size: .68rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      font-family: 'Bricolage Grotesque', sans-serif
+    }
+
+    .qr-cb.done {
+      background: var(--p);
+      color: var(--l)
+    }
+
+    .qr-cb.skip {
+      background: var(--border);
+      color: var(--muted)
+    }
+
+    /* ── IMPACT SECTION ── */
+    .impact-section {
+      padding: 6rem 5rem;
+      background: var(--off)
+    }
+
+    .impact-head {
+      text-align: center;
+      margin-bottom: 4rem
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem
+    }
+
+    .impact-card {
+      background: var(--w);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+      transition: all .3s
+    }
+
+    .impact-card:hover {
+      border-color: var(--p);
+      box-shadow: 0 8px 30px rgba(77, 16, 166, .1);
+      transform: translateY(-3px)
+    }
+
+    .impact-ico {
+      font-size: 1.6rem;
+      margin-bottom: .8rem;
+      display: block
+    }
+
+    .impact-val {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 2.5rem;
+      color: var(--p);
+      line-height: 1;
+      margin-bottom: .35rem
+    }
+
+    .impact-val .lime-sup {
+      color: var(--l);
+      background: var(--p);
+      padding: 0 .2rem;
+      font-size: .7em
+    }
+
+    .impact-lbl {
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .5px;
+      color: var(--muted)
+    }
+
+    /* ── PDF SECTION ── */
+    .pdf-section {
+      padding: 7rem 5rem;
+      background: var(--w)
+    }
+
+    .pdf-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center
+    }
+
+    .pdf-visual {
+      background: var(--off);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden
+    }
+
+    .pdf-header {
+      background: var(--p);
+      padding: .8rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .pdf-header-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .78rem;
+      color: var(--l)
+    }
+
+    .pdf-header-date {
+      font-size: .6rem;
+      color: rgba(255, 255, 255, .5)
+    }
+
+    .pdf-body {
+      padding: 1.2rem
+    }
+
+    .pdf-summary-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: .6rem;
+      margin-bottom: .9rem
+    }
+
+    .pdf-sk {
+      background: var(--w);
+      border-radius: 7px;
+      padding: .65rem;
+      border-left: 3px solid var(--p)
+    }
+
+    .pdf-sk.lime-border {
+      border-color: var(--l)
+    }
+
+    .pdf-sk-val {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--p)
+    }
+
+    .pdf-sk.lime-border .pdf-sk-val {
+      color: var(--ink)
+    }
+
+    .pdf-sk-lbl {
+      font-size: .55rem;
+      color: var(--light);
+      margin-top: 1px;
+      text-transform: uppercase;
+      letter-spacing: .8px
+    }
+
+    .pdf-cat-row {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: .45rem
+    }
+
+    .pdf-cat-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .pdf-cat-name {
+      font-size: .7rem;
+      color: var(--muted);
+      flex: 1
+    }
+
+    .pdf-cat-bar {
+      flex: 2;
+      height: 5px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .pdf-cat-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--p)
+    }
+
+    .pdf-cat-val {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--ink);
+      width: 55px;
+      text-align: right
+    }
+
+    .pdf-download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      margin-top: .9rem;
+      padding: .65rem;
+      background: var(--l);
+      border-radius: 7px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .76rem;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background .2s
+    }
+
+    .pdf-download-btn:hover {
+      background: var(--lm)
+    }
+
+    /* ── CREDITS ── */
+    .credits-section {
+      padding: 6rem 5rem;
+      background: var(--p);
+      text-align: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .credits-section::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: rgba(225, 255, 23, .06);
+      pointer-events: none
+    }
+
+    .credits-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: rgba(255, 255, 255, .12);
+      color: var(--l);
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: .28rem .8rem;
+      border-radius: 2px;
+      margin-bottom: 1.5rem
+    }
+
+    .credits-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      color: var(--w);
+      margin-bottom: .8rem
+    }
+
+    .credits-title .lime {
+      color: var(--l)
+    }
+
+    .credits-subtitle {
+      font-size: .85rem;
+      color: rgba(255, 255, 255, .5);
+      margin-bottom: 3rem
+    }
+
+    .credits-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.4rem;
+      max-width: 1000px;
+      margin: 0 auto
+    }
+
+    .credit-card {
+      background: rgba(255, 255, 255, .07);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      transition: all .3s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .credit-card:hover {
+      background: rgba(255, 255, 255, .12);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, .15)
+    }
+
+    .credit-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      margin: 0 auto .9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      color: var(--ink)
+    }
+
+    .credit-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: .92rem;
+      color: var(--w);
+      margin-bottom: .3rem
+    }
+
+    .credit-role {
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: .2rem .6rem;
+      border-radius: 2px;
+      display: inline-block;
+      margin-bottom: .5rem
+    }
+
+    .credit-role.backend {
+      background: rgba(225, 255, 23, .15);
+      color: var(--l)
+    }
+
+    .credit-role.frontend {
+      background: rgba(255, 255, 255, .12);
+      color: rgba(255, 255, 255, .7)
+    }
+
+    @media(max-width:900px) {
+      .credits-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem
+      }
+
+      .credits-section {
+        padding: 4rem 2rem
+      }
+    }
+
+    @media(max-width:500px) {
+      .credits-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    /* ── FOOTER ── */
+    .footer-stripe {
+      height: 3px;
+      background: linear-gradient(90deg, var(--p) 0%, var(--l) 50%, var(--p) 100%)
+    }
+
+    footer {
+      background: var(--ink);
+      padding: 2.8rem 5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .footer-brand {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--w)
+    }
+
+    .footer-brand span {
+      color: var(--l)
+    }
+
+    .footer-sub {
+      font-size: .65rem;
+      color: rgba(255, 255, 255, .3);
+      margin-top: 3px
+    }
+
+    .footer-copy {
+      font-size: .65rem;
+      color: rgba(255, 255, 255, .25)
+    }
+
+    .footer-note {
+      font-size: .65rem;
+      color: rgba(255, 255, 255, .3);
+      text-align: right
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes float-up {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .anim {
+      opacity: 0;
+      animation: float-up .6s ease both
+    }
+
+    .anim-d1 {
+      animation-delay: .1s
+    }
+
+    .anim-d2 {
+      animation-delay: .2s
+    }
+
+    .anim-d3 {
+      animation-delay: .3s
+    }
+
+    .anim-d4 {
+      animation-delay: .4s
+    }
+
+    .anim-d5 {
+      animation-delay: .5s
+    }
+
+    @media(max-width:900px) {
+      nav {
+        padding: 0 1.5rem
+      }
+
+      .nav-links {
+        display: none
+      }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        padding: 3rem 2rem
+      }
+
+      .hero-right {
+        display: none
+      }
+
+      .features-section,
+      .core-section,
+      .how-section,
+      .mtt-section,
+      .upi-section,
+      .impact-section,
+      .pdf-section,
+      .cta-section {
+        padding: 4rem 2rem
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr
+      }
+
+      .core-grid,
+      .how-inner,
+      .mtt-inner,
+      .upi-inner,
+      .pdf-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem
+      }
+
+      .impact-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 1.2rem;
+        padding: 2rem;
+        text-align: center
+      }
+
+      .footer-note {
+        text-align: center
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <div class="nav-logo">
+      <div class="logo-mark"></div>
+      <div class="nav-brand">Expense<em>Tracker</em></div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#core">Core Features</a></li>
+      <li><a href="#how">How it Works</a></li>
+      <li><a href="#converter">Money to Time</a></li>
+    </ul>
+    <div class="nav-cta">
+      <button class="btn-solid" onclick="window.parent.location.href='/signup'">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-shape"></div>
+    <div class="hero-bg-shape2"></div>
+    <div class="hero-grid-lines"></div>
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow anim anim-d1">Smart Money Management</div>
+        <h1 class="hero-title anim anim-d2">Know<br><span class="white-stroke">Every</span><br><span class="lime"
+            style="-webkit-text-stroke:0;background:var(--p);padding:0 .2rem">Rupee.</span></h1>
+        <p class="hero-desc anim anim-d3">Track expenses, block impulse buys, scan UPI QR codes, and convert spending
+          into <strong>real work hours</strong> — all in one place.</p>
+
+        <div class="hero-stats anim anim-d5">
+          <div class="hstat">
+            <div class="hstat-num">12<sup>+</sup></div>
+            <div class="hstat-lbl">Smart Features</div>
+          </div>
+          <div class="hstat-divider"></div>
+          <div class="hstat">
+            <div class="hstat-num">₹0</div>
+            <div class="hstat-lbl">Forever Free</div>
+          </div>
+          <div class="hstat-divider"></div>
+          <div class="hstat">
+            <div class="hstat-num">100<sup>%</sup></div>
+            <div class="hstat-lbl">Private & Secure</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right anim anim-d3">
+        <div class="app-mockup">
+          <div class="mock-header">
+            <div class="mock-h-title">March 2025 Overview</div>
+            <div class="mock-h-date">Updated just now</div>
+          </div>
+          <div class="mock-body">
+            <div class="mock-summary">
+              <div class="mock-kpi">
+                <div class="mock-kpi-val">₹18,240</div>
+                <div class="mock-kpi-lbl">Spent</div>
+              </div>
+              <div class="mock-kpi">
+                <div class="mock-kpi-val">₹6,760</div>
+                <div class="mock-kpi-lbl">Remaining</div>
+              </div>
+              <div class="mock-kpi">
+                <div class="mock-kpi-val lime" style="background:var(--l);border-radius:6px;padding:.4rem .5rem">₹589
+                </div>
+                <div class="mock-kpi-lbl">Today</div>
+              </div>
+            </div>
+            <div style="font-size:.6rem;color:var(--light);margin-bottom:.3rem;letter-spacing:.8px">BUDGET USED — 73%
+            </div>
+            <div class="mock-bar">
+              <div class="mock-bar-fill"></div>
+            </div>
+            <div
+              style="font-size:.58rem;color:var(--light);display:flex;justify-content:space-between;margin-bottom:.9rem">
+              <span>₹0</span><span>₹25,000</span>
+            </div>
+            <div class="mock-entries">
+              <div class="mock-entry">
+                <div class="mock-entry-ico" style="background:#FFF3E0">🛒</div>
+                <div class="mock-entry-label">
+                  <div class="mock-entry-name">Big Bazaar</div>
+                  <div class="mock-entry-cat">Groceries · Today</div>
+                </div>
+                <div class="mock-entry-amt">−₹1,240</div>
+              </div>
+              <div class="mock-entry">
+                <div class="mock-entry-ico" style="background:#E8F5E9">🚌</div>
+                <div class="mock-entry-label">
+                  <div class="mock-entry-name">Metro Card Recharge</div>
+                  <div class="mock-entry-cat">Transport · Yesterday</div>
+                </div>
+                <div class="mock-entry-amt">−₹500</div>
+              </div>
+              <div class="mock-entry">
+                <div class="mock-entry-ico" style="background:#F3E5F5">☕</div>
+                <div class="mock-entry-label">
+                  <div class="mock-entry-name">Starbucks</div>
+                  <div class="mock-entry-cat">Food & Drinks · 2d ago</div>
+                </div>
+                <div class="mock-entry-amt neg" style="color:var(--pm)">−₹340</div>
+              </div>
+              <div class="mock-entry"
+                style="background:rgba(225,255,23,.1);border-radius:7px;border:1px solid rgba(225,255,23,.3)">
+                <div class="mock-entry-ico" style="background:rgba(77,16,166,.1)">📈</div>
+                <div class="mock-entry-label">
+                  <div class="mock-entry-name">SIP — Axis Bluechip</div>
+                  <div class="mock-entry-cat">Investment · Monthly</div>
+                </div>
+                <div class="mock-entry-amt" style="color:var(--p)">−₹3,000</div>
+              </div>
+            </div>
+            <div class="mock-add-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Add Expense
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span class="ticker-item"><span class="ti-lime">✦</span> Expense Tracking <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> SIP Investment Log <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> UPI QR Scanner <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> Impulse Buy Guard <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> Money-to-Time Converter <span
+          class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> PDF Monthly Reports <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> Smart Budget Alerts <span class="ti-lime">·</span></span>
+
+      <!-- repeat -->
+      <span class="ticker-item"><span class="ti-lime">✦</span> Expense Tracking <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> SIP Investment Log <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> UPI QR Scanner <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> Impulse Buy Guard <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> Money-to-Time Converter <span
+          class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> PDF Monthly Reports <span class="ti-lime">·</span></span>
+      <span class="ticker-item"><span class="ti-lime">✦</span> Smart Budget Alerts <span class="ti-lime">·</span></span>
+
+    </div>
+  </div>
+
+  <!-- BASIC FEATURES -->
+  <section class="features-section" id="features">
+    <div class="features-head">
+      <div class="sec-tag">Basic Features</div>
+      <h2 class="sec-title">Everything You Need<br>to <span class="accent">Stay on Track</span></h2>
+      <p class="sec-desc">A clean, fast experience for logging and understanding your money — built around the way you
+        actually spend.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-ico">👤</div>
+        <div class="feat-num">01</div>
+        <div class="feat-title">User System</div>
+        <p class="feat-desc">Register, log in, and set your monthly salary. See exactly how much you have left after
+          every expense, with a real-time monthly comparison.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">⚡</div>
+        <div class="feat-num">02</div>
+        <div class="feat-title">Quick Expense Entry</div>
+        <p class="feat-desc">Amount, Category, Date (auto-filled), and Note — a clean form designed for speed. Add an
+          expense in under 10 seconds.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">📋</div>
+        <div class="feat-num">03</div>
+        <div class="feat-title">Multiple View Modes</div>
+        <p class="feat-desc">Switch between List, Table, and Card/Detail views. Every entry shows amount, category, and
+          date — exactly what you need.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">🔍</div>
+        <div class="feat-num">04</div>
+        <div class="feat-title">Sort & Filter</div>
+        <p class="feat-desc">Sort by latest, category, or amount. Filter by any date range and instantly see the total
+          for that result set.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">🔔</div>
+        <div class="feat-num">05</div>
+        <div class="feat-title">Smart Alerts</div>
+        <p class="feat-desc">Intelligent notifications based on your spending patterns and budget thresholds — so you
+          know before it's too late.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">📊</div>
+        <div class="feat-num">06</div>
+        <div class="feat-title">Dashboard Overview</div>
+        <p class="feat-desc">Total spending this month, today's spending, and your average daily spend — all on one
+          screen.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">📅</div>
+        <div class="feat-num">07</div>
+        <div class="feat-title">Monthly Salary Tracker</div>
+        <p class="feat-desc">Set your monthly income and watch the remaining balance update live as you add expenses
+          throughout the month.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">💡</div>
+        <div class="feat-num">08</div>
+        <div class="feat-title">Spending Insights</div>
+        <p class="feat-desc">Category-wise breakdowns automatically highlight where your money actually goes each month.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE FEATURES -->
+  <section class="core-section" id="core">
+    <div class="core-head">
+      <div class="sec-tag">Core Features</div>
+      <h2 class="sec-title" style="color:var(--w)">Tools That Change<br>How You Think About <span
+          style="color:var(--l)">Money</span></h2>
+      <p class="sec-desc" style="color:rgba(255,255,255,.6);margin:0 auto">Five powerful features that go beyond basic
+        tracking — designed to make you financially mindful.</p>
+    </div>
+    <div class="core-grid">
+      <div class="core-card">
+        <div class="core-num">01</div>
+        <span class="core-ico">📈</span>
+        <div class="core-badge"><span class="core-tag">Investments</span></div>
+        <div class="core-title">SIP & Investment Tracking</div>
+        <p class="core-desc">Log monthly SIPs and fixed investments separately from expenses. Get a true picture of
+          disposable income vs. wealth-building.</p>
+        <div class="core-feature-list">
+          <div class="core-feat-item">Track Axis, HDFC, SBI Mutual Funds</div>
+          <div class="core-feat-item">Separated from regular expense totals</div>
+          <div class="core-feat-item">Monthly investment summary on dashboard</div>
+        </div>
+      </div>
+      <div class="core-card highlight">
+        <div class="core-num" style="color:rgba(13,8,32,.08)">02</div>
+        <span class="core-ico">🛑</span>
+        <div class="core-badge"><span class="core-tag">Mindful Spending</span></div>
+        <div class="core-title">Impulse Buy Delay System</div>
+        <p class="core-desc">Flag non-essential expenses and trigger a deliberate pause — making you think twice before
+          adding that ₹2,400 gadget.</p>
+        <div class="core-feature-list">
+          <div class="core-feat-item">Configurable delay period (5–30 mins)</div>
+          <div class="core-feat-item">Custom category flagging</div>
+          <div class="core-feat-item">Reflection prompt before confirmation</div>
+        </div>
+      </div>
+      <div class="core-card highlight">
+        <div class="core-num" style="color:rgba(13,8,32,.08)">03</div>
+        <span class="core-ico">⏱️</span>
+        <div class="core-badge"><span class="core-tag">Reality Check</span></div>
+        <div class="core-title">Money-to-Time Converter</div>
+        <p class="core-desc">That ₹4,800 dinner = 19.2 hours of your work. See every expense as hours of your life — and
+          spend more intentionally.</p>
+        <div class="core-feature-list">
+          <div class="core-feat-item">Based on your actual monthly salary</div>
+          <div class="core-feat-item">Shows hours and days of work equivalent</div>
+          <div class="core-feat-item">Live preview while adding any expense</div>
+        </div>
+      </div>
+      <div class="core-card">
+        <div class="core-num">04</div>
+        <span class="core-ico">📷</span>
+        <div class="core-badge"><span class="core-tag">UPI Integration</span></div>
+        <div class="core-title">GPay / UPI QR Scanner</div>
+        <p class="core-desc">Scan any merchant QR code, get a pre-filled expense form, then pay via your UPI app.
+          Transactions are marked pending until confirmed.</p>
+        <div class="core-feature-list">
+          <div class="core-feat-item">In-browser QR scanner, no app needed</div>
+          <div class="core-feat-item">Pending → Done / Not Done confirmation</div>
+          <div class="core-feat-item">Failed payments excluded from totals</div>
+        </div>
+      </div>
+      <div class="core-card"
+        style="grid-column:span 2;background:rgba(225,255,23,.08);border-color:rgba(225,255,23,.2)">
+        <div class="core-num" style="color:rgba(225,255,23,.1)">05</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center">
+          <div>
+            <span class="core-ico">📄</span>
+            <div class="core-badge"><span class="core-tag">Monthly Reports</span></div>
+            <div class="core-title" style="color:var(--w)">PDF Monthly Summary</div>
+            <p class="core-desc">Download a clean, detailed PDF for any month — category breakdown, daily averages, SIP
+              summary, and income vs. spend ratio.</p>
+            <div class="core-feature-list" style="margin-top:.8rem">
+              <div class="core-feat-item">One-click download per month</div>
+              <div class="core-feat-item">Charts, totals &amp; category drill-downs</div>
+              <div class="core-feat-item">Share with CA or financial advisor</div>
+            </div>
+          </div>
+          <div
+            style="background:rgba(255,255,255,.05);border-radius:8px;padding:1.2rem;border:1px solid rgba(255,255,255,.1)">
+            <div
+              style="font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.9rem">
+              Sample Report Preview</div>
+            <div
+              style="display:flex;justify-content:space-between;font-size:.68rem;color:rgba(255,255,255,.6);margin-bottom:.5rem">
+              <span>Total Spent</span><span style="color:var(--l);font-weight:700">₹18,240</span>
+            </div>
+            <div
+              style="display:flex;justify-content:space-between;font-size:.68rem;color:rgba(255,255,255,.6);margin-bottom:.5rem">
+              <span>Invested (SIP)</span><span style="color:var(--l);font-weight:700">₹3,000</span>
+            </div>
+            <div
+              style="display:flex;justify-content:space-between;font-size:.68rem;color:rgba(255,255,255,.6);margin-bottom:.5rem">
+              <span>Remaining</span><span style="color:var(--l);font-weight:700">₹6,760</span>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,.1);margin:.65rem 0"></div>
+            <div style="font-size:.62rem;color:rgba(255,255,255,.35);margin-bottom:.4rem">Category Breakdown</div>
+            <div
+              style="font-size:.68rem;color:rgba(255,255,255,.6);display:flex;justify-content:space-between;margin-bottom:.3rem">
+              <span>🛒 Groceries</span><span>₹4,200</span>
+            </div>
+            <div
+              style="font-size:.68rem;color:rgba(255,255,255,.6);display:flex;justify-content:space-between;margin-bottom:.3rem">
+              <span>🍔 Food &amp; Dining</span><span>₹3,840</span>
+            </div>
+            <div style="font-size:.68rem;color:rgba(255,255,255,.6);display:flex;justify-content:space-between"><span>🚌
+                Transport</span><span>₹2,100</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how">
+    <div class="how-inner">
+      <div>
+        <div class="sec-tag">How It Works</div>
+        <h2 class="sec-title">From Spend to<br><span class="accent">Insight</span> in Seconds</h2>
+        <p class="sec-desc">A simple 4-step loop that turns every purchase into financial clarity.</p>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-num">01</div>
+            <div>
+              <div class="how-step-title">Set Your Salary & Budget</div>
+              <p class="how-step-desc">Enter your monthly take-home salary. The app instantly calculates your available
+                budget and daily spending limit.</p>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">02</div>
+            <div>
+              <div class="how-step-title">Log Expenses Instantly</div>
+              <p class="how-step-desc">Quick-entry form with auto-filled date. Add an expense in under 10 seconds — from
+                a QR scan or manual entry.</p>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">03</div>
+            <div>
+              <div class="how-step-title">Get Smart Nudges</div>
+              <p class="how-step-desc">Impulse buy delays, money-to-time reality checks, and budget alerts keep you
+                mindful before you overspend.</p>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">04</div>
+            <div>
+              <div class="how-step-title">Review & Download Report</div>
+              <p class="how-step-desc">Dashboard shows today, this month, and trends. Download a full PDF summary
+                anytime.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="how-visual">
+        <div class="how-visual-title">Live Dashboard Preview</div>
+        <div class="how-metric">
+          <div class="how-metric-label">Monthly Budget Used</div>
+          <div class="how-metric-val">₹18,240 <span class="lime-accent">/ ₹25,000</span></div>
+        </div>
+        <div class="how-bar">
+          <div class="how-bar-fill" style="width:73%"></div>
+        </div>
+        <div class="how-bar-lbl"><span>73% used</span><span>₹6,760 left</span></div>
+        <div style="height:1px;background:rgba(255,255,255,.1);margin:1.2rem 0"></div>
+        <div class="how-metric">
+          <div class="how-metric-label">Today's Spending</div>
+          <div class="how-metric-val" style="font-size:1.3rem">₹589</div>
+        </div>
+        <div class="how-bar" style="height:5px">
+          <div class="how-bar-fill" style="width:28%;background:rgba(255,255,255,.4)"></div>
+        </div>
+        <div class="how-bar-lbl"><span>Daily limit: ₹2,100</span><span style="color:rgba(255,255,255,.6)">✓ On
+            track</span></div>
+        <div style="height:1px;background:rgba(255,255,255,.1);margin:1.2rem 0"></div>
+        <div class="how-metric">
+          <div class="how-metric-label">Work Hours This Purchase Cost</div>
+          <div class="how-metric-val" style="font-size:1.2rem">Zomato ₹340 = <span class="lime-accent">1.4 hrs</span>
+          </div>
+        </div>
+        <div class="how-alert">
+          <div class="how-alert-ico">⚠️</div>
+          <div class="how-alert-text">You've spent <strong>₹3,840 on Food & Dining</strong> this month — 21% above your
+            average. Consider cooking more this week.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONEY TO TIME CONVERTER -->
+  <section class="mtt-section" id="converter">
+    <div class="mtt-inner">
+      <div>
+        <div class="sec-tag">Money-to-Time</div>
+        <h2 class="sec-title">₹500 = <span class="accent">2 Hours</span><br>of Your Life</h2>
+        <p class="sec-desc">Before every purchase, see it as hours of work — not just rupees. It's the most powerful
+          nudge to spend intentionally.</p>
+        <p class="sec-desc" style="margin-top:1rem">Enter your monthly salary and an expense amount to see the real cost
+          of any purchase in your time.</p>
+      </div>
+      <div class="mtt-calc">
+        <div class="mtt-row">
+          <div class="mtt-label">Your Monthly Salary (₹)</div>
+          <input class="mtt-input" type="number" id="salary-input" placeholder="e.g. 45000" value="45000">
+        </div>
+        <div class="mtt-row">
+          <div class="mtt-label">Expense Amount (₹)</div>
+          <input class="mtt-input" type="number" id="expense-input" placeholder="e.g. 1200" value="1200">
+        </div>
+        <button class="mtt-calc-btn" onclick="calcMTT()">Calculate Work Hours →</button>
+        <div class="mtt-result" id="mtt-result">
+          <div class="mtt-result-label">This expense equals</div>
+          <div class="mtt-result-val" id="mtt-hours">5.3 hours</div>
+          <div class="mtt-result-sub" id="mtt-days">or 0.66 working days</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPI QR SCANNER -->
+  <section class="upi-section" id="upi">
+    <div class="upi-inner">
+      <div class="upi-content">
+        <div class="sec-tag">UPI QR Scanner</div>
+        <h2 class="sec-title" style="color:var(--w)">Scan. Log.<br><span style="color:var(--l)">Pay. Done.</span></h2>
+        <p class="sec-desc" style="color:rgba(255,255,255,.65)">Open the app before any UPI payment. Scan the merchant
+          QR, fill in the amount, and confirm — the expense is pre-logged before you even pay.</p>
+        <div class="upi-steps">
+          <div class="upi-step">
+            <div class="upi-step-num">1</div>
+            <div>
+              <div class="upi-step-title">Scan the Merchant QR</div>
+              <p class="upi-step-desc">Use the built-in in-browser QR scanner. No separate app needed.</p>
+            </div>
+          </div>
+          <div class="upi-step">
+            <div class="upi-step-num">2</div>
+            <div>
+              <div class="upi-step-title">Fill Expense Details</div>
+              <p class="upi-step-desc">Date is auto-filled. Add amount, category and note, then confirm.</p>
+            </div>
+          </div>
+          <div class="upi-step">
+            <div class="upi-step-num">3</div>
+            <div>
+              <div class="upi-step-title">Pay via Your UPI App</div>
+              <p class="upi-step-desc">You're redirected to GPay, PhonePe, or Paytm to complete payment.</p>
+            </div>
+          </div>
+          <div class="upi-step">
+            <div class="upi-step-num">4</div>
+            <div>
+              <div class="upi-step-title">Confirm Payment Status</div>
+              <p class="upi-step-desc">Mark as "Payment Done" or "Not Done". Failed transactions are never counted.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="upi-visual">
+        <div class="qr-mockup">
+          <div class="qr-title">📷 Scan UPI QR Code</div>
+          <div class="qr-box" id="qr-box">
+            <div class="qr-scan-line"></div>
+            <div class="qr-grid" id="qr-grid"></div>
+          </div>
+          <div style="font-size:.65rem;color:var(--light);margin-bottom:.9rem">Scanning... · point camera at merchant QR
+          </div>
+          <div class="qr-popup">
+            <div class="qr-popup-title">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              QR Detected — Add Expense?
+            </div>
+            <div class="qr-popup-row"><span>Merchant</span><span>Swiggy Food</span></div>
+            <div class="qr-popup-row"><span>Date</span><span>17 Mar 2025</span></div>
+            <div class="qr-popup-row"><span>Amount (₹)</span><span style="color:var(--p);font-weight:700">Enter amount
+                →</span></div>
+            <div class="qr-popup-row"><span>Status</span><span style="color:#F57F17">⏳ Pending</span></div>
+            <div class="qr-confirm-btns">
+              <div class="qr-cb done">✓ Pay &amp; Log</div>
+              <div class="qr-cb skip">✗ Cancel</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT STATS -->
+  <section class="impact-section">
+    <div class="impact-head">
+      <div class="sec-tag" style="background:var(--p)">Why It Works</div>
+      <h2 class="sec-title">Numbers That<br><span class="accent">Speak for Themselves</span></h2>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card"><span class="impact-ico">💰</span>
+        <div class="impact-val">₹0<span class="lime-sup">Free</span></div>
+        <div class="impact-lbl">Forever free, no premium plans</div>
+      </div>
+      <div class="impact-card"><span class="impact-ico">⚡</span>
+        <div class="impact-val">10<span class="lime-sup">sec</span></div>
+        <div class="impact-lbl">Average expense entry time</div>
+      </div>
+      <div class="impact-card"><span class="impact-ico">🛑</span>
+        <div class="impact-val">3x</div>
+        <div class="impact-lbl">Less impulse buys with delay system</div>
+      </div>
+      <div class="impact-card"><span class="impact-ico">📄</span>
+        <div class="impact-val">1<span class="lime-sup">click</span></div>
+        <div class="impact-lbl">Monthly PDF report download</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREDITS -->
+  <section class="credits-section">
+    <div class="credits-eyebrow">✦ The Team</div>
+    <h2 class="credits-title">Built with ❤ by <span class="lime">Our Team</span></h2>
+    <p class="credits-subtitle">The people behind ExpenseTracker</p>
+    <div class="credits-grid">
+      <div class="credit-card">
+        <div class="credit-avatar" style="background:var(--l)">VB</div>
+        <div class="credit-name">Vir Bhadra</div>
+        <span class="credit-role backend">Backend Developer</span>
+      </div>
+      <div class="credit-card">
+        <div class="credit-avatar" style="background:rgba(255,255,255,.15);color:var(--w)">AS</div>
+        <div class="credit-name">Ananya Sinha</div>
+        <span class="credit-role frontend">Frontend Developer</span>
+      </div>
+      <div class="credit-card">
+        <div class="credit-avatar" style="background:rgba(255,255,255,.15);color:var(--w)">KB</div>
+        <div class="credit-name">Keshvi Bramhankar</div>
+        <span class="credit-role frontend">Frontend Developer</span>
+      </div>
+      <div class="credit-card">
+        <div class="credit-avatar" style="background:var(--l)">KP</div>
+        <div class="credit-name">Krishna Prajapati</div>
+        <span class="credit-role backend">Backend Developer</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-stripe"></div>
+  <footer>
+    <div>
+      <div class="footer-brand">Expense<span>Tracker</span></div>
+      <div class="footer-sub">Know every rupee. Every day.</div>
+    </div>
+    <div class="footer-copy">© 2025 ExpenseTracker · Built with ❤ for mindful spending</div>
+    <div class="footer-note">White · #4D10A6 · #E1FF17</div>
+  </footer>
+
+  <script>
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      const n = document.getElementById('main-nav');
+      if (window.scrollY > 40) { n.style.boxShadow = '0 2px 20px rgba(77,16,166,.1)' }
+      else { n.style.boxShadow = 'none' }
+    }, { passive: true });
+
+    // Money-to-time calc
+    function calcMTT() {
+      const sal = parseFloat(document.getElementById('salary-input').value) || 45000;
+      const exp = parseFloat(document.getElementById('expense-input').value) || 1200;
+      const hourlyRate = sal / 26 / 8;
+      const hours = (exp / hourlyRate).toFixed(1);
+      const days = (exp / hourlyRate / 8).toFixed(2);
+      document.getElementById('mtt-hours').textContent = hours + ' hours';
+      document.getElementById('mtt-days').textContent = 'or ' + days + ' working days';
+    }
+    calcMTT();
+    document.getElementById('salary-input').addEventListener('input', calcMTT);
+    document.getElementById('expense-input').addEventListener('input', calcMTT);
+
+    // QR dot grid
+    (function buildQR() {
+      const g = document.getElementById('qr-grid');
+      const pattern = [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
+      pattern.forEach(v => {
+        const c = document.createElement('div');
+        c.className = 'qr-cell';
+        c.style.background = v ? '#0D0820' : 'transparent';
+        g.appendChild(c);
+      });
+    })();
+
+    // Intersection observer for animations
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)' }
+      });
+    }, { threshold: .15 });
+    document.querySelectorAll('.feat-card,.core-card,.how-step,.impact-card,.upi-step').forEach(el => {
+      el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'opacity .5s ease, transform .5s ease';
+      obs.observe(el);
+    });
+  </script>
+</body>
+
+</html>

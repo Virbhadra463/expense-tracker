@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+design/
+media/
+node_modules/
+frontend/build/
+frontend/dist/
+.env
+.env.local
+seed_expenses.py
+django_cheatsheet.txt
+

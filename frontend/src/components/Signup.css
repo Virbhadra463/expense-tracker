@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+.font-inter {
+    font-family: 'Inter', sans-serif;
+}
+
+.form-input {
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    transition: all 0.2s;
+}
+
+.form-input:focus {
+    background: #ffffff;
+    border-color: #5b2ccf;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(91, 44, 207, 0.1);
+}
