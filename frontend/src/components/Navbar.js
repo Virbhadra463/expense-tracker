@@ -28,12 +28,16 @@ const Navbar = () => {
         <header className="w-full h-[62px] flex items-center justify-between px-6 lg:px-12 bg-white border-b-[1.5px] border-[#E8E0FF] relative z-50 transition-all duration-300">
             {/* Top Left: Logo from Landingpage */}
             <div className="flex items-center gap-[0.7rem]">
-                <Link to={isLoggedInPage ? "/home" : "/"} className="flex items-center gap-[0.7rem] font-['Bricolage_Grotesque',sans-serif] font-[800] text-[1.1rem] tracking-[-0.5px] text-[#4D10A6]">
-                    <div className="w-[36px] h-[36px] bg-[#4D10A6] rounded-lg flex items-center justify-center relative overflow-hidden">
-                        <span className="text-[#E1FF17] absolute leading-none">₹</span>
-                    </div>
-                    <span>Spend<em className="text-[#4D10A6] not-italic font-normal">Smart</em></span>
-                </Link>
+<Link 
+  to={isLoggedInPage ? "/home" : "/"} 
+  className="flex items-center gap-[0.7rem] font-['Bricolage_Grotesque',sans-serif] font-[800] text-[1.1rem] tracking-[-0.5px] text-[#4D10A6] no-underline"
+>
+  <div className="w-[36px] h-[36px] bg-[#4D10A6] rounded-lg flex items-center justify-center relative overflow-hidden">
+    <span className="text-[#E1FF17] absolute leading-none">₹</span>
+  </div>
+  <span>Expense<em className="text-[#4D10A6] not-italic font-normal">Tracker</em></span>
+</Link>
+
             </div>
 
             {/* Center Navigation for Logged-In Users */}
